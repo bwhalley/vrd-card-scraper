@@ -71,6 +71,10 @@ with open('vrd.csv', 'r') as input_file:
     reader = csv.reader(input_file)
     next(reader)  # Skip header
     card_names = [row[0] for row in reader]
+# Open output file at the start
+output_file = open('results.csv', 'w', newline='')
+writer = csv.writer(output_file)
+writer.writerow(['card_name', 'data'])
 
 # Process cards in parallel
 results = []
@@ -82,14 +86,8 @@ with concurrent.futures.ThreadPoolExecutor(max_workers=10) as executor:
     for future in concurrent.futures.as_completed(future_to_card):
         result = future.result()
         if result:
-            results.append(result)
+            writer.writerow(result)
         time.sleep(0.1)  # Small delay to avoid overwhelming the API
-
-# Write results to CSV
-with open('results.csv', 'w', newline='') as output_file:
-    writer = csv.writer(output_file)
-    writer.writerow(['card_name', 'data'])
-    writer.writerows(results)
 
 print("All cards processed!")
 
