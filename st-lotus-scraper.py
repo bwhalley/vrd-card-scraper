@@ -86,7 +86,11 @@ with concurrent.futures.ThreadPoolExecutor(max_workers=10) as executor:
     for future in concurrent.futures.as_completed(future_to_card):
         result = future.result()
         if result:
-            writer.writerow(result)
+            results.append(result)
+            if len(results) >= 1000:
+                for r in results:
+                    writer.writerow(r)
+                results = []
         time.sleep(0.1)  # Small delay to avoid overwhelming the API
 
 print("All cards processed!")
