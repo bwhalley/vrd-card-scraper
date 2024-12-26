@@ -81,7 +81,7 @@ results = []
 with concurrent.futures.ThreadPoolExecutor(max_workers=10) as executor:
     # Submit all tasks
     future_to_card = {executor.submit(process_card, name): name for name in card_names}
-    
+    print(f"Submitting {len(card_names)} cards for processing...")
     # Collect results as they complete
     for future in concurrent.futures.as_completed(future_to_card):
         result = future.result()
